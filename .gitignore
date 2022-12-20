@@ -1,3 +1,4 @@
-./credentials/*
-./__pycache__/*
-./generated_content/*
+.DS_Store
+credentials/
+__pycache__/
+generated_content/
