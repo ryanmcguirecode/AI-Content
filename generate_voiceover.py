@@ -28,6 +28,9 @@ def text_to_wav(text: str, filepath: str, voice: Voice):
         out.write(response.audio_content)
         print(f'Generated speech saved to "{filepath}"')
         
+def select_voice():
+    pass
+
 def generate(text: str, filepath: str):
     voices = [Voice("en-US-Wavenet-I"), Voice("en-US-Neural2-D"), 
               Voice("en-US-Neural2-H"), Voice("en-US-Neural2-I"), 
