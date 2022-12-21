@@ -6,21 +6,22 @@ import generate_text
 import generate_image
 
 class ContentGenerator:
-    def __init__(self, topic: str) -> str:
-        self.topic = topic
-        self.destination = os.path.join("generated_content", "fable_" + topic + "_" +  datetime.now().strftime("%m%d%Y_%H%M"))
+    def __init__(self, prompt: str, name: str) -> str:
+        self.prompt = prompt
+        self.destination = os.path.join("generated_content", name + "_" +  datetime.now().strftime("%m%d%Y_%H%M"))
         os.mkdir(self.destination)
 
-        self.paragraphs = self.generate_story()
+        self.paragraphs = self.generate_text()
         self.generate_visuals()
+        self.voice = generate_voiceover.select_voice()
         self.generate_audio()
     
-    def generate_story(self) -> list[str]:
-        print("Generating fable about " + self.topic + "...")
+    def generate_text(self) -> list[str]:
+        print("Generating response based on prompt...")
         try:
             filepath = os.path.join(self.destination, "generated_text.txt")
-            text = generate_text.generate('write a short fable about ' + self.topic + ' that rhymes', filepath)
-            return [par.strip() for par in text.split("\n") if par]
+            self.text = generate_text.generate(self.prompt, filepath)
+            return [par.strip() for par in self.text.split("\n") if par]
         except:
             print("Error generating text:")
             print_exc()
@@ -40,13 +41,11 @@ class ContentGenerator:
             exit()
     
     def generate_audio(self):
-        print("Generating voiceovers for each paragraph...")
+        print("Generating voiceover and timestamps...")
         try:
-            self.voiceovers_directory = os.path.join(self.destination, "voiceovers")
-            os.mkdir(self.voiceovers_directory)
-            for i, paragraph in enumerate(self.paragraphs):
-                filepath = os.path.join(self.voiceovers_directory, "generated_voiceover_" + str(i) + ".wav")
-                generate_voiceover.generate(paragraph, filepath)
+            voiceover_outpath = os.path.join(self.destination, "generated_voiceover.wav")
+            timestamps_outpath = os.path.join(self.destination, "timestamps.json")
+            generate_voiceover.generate(self.text, voiceover_outpath, timestamps_outpath, self.voice)
         except:
             print("Error generating voiceovers:")
             print_exc()

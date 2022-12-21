@@ -12,5 +12,5 @@ topics = ['celebrities', 'space', 'philosophy', 'photography', 'health', 'relati
           'world news', 'writing', 'work', 'people']
 topic = choice(topics)
 
-fable_content = ContentGenerator(topic)
+fable_content = ContentGenerator("Write a short fable about " + topic, "fable_" + topic)
 generate_video.generate(fable_content)

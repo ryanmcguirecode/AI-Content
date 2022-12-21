@@ -1,5 +1,6 @@
-import google.cloud.texttospeech as tts
+import google.cloud.texttospeech_v1beta1 as tts
 import os
+import json
 from random import choice
 
 import os
@@ -11,29 +12,62 @@ class Voice:
         self.language_code = "-".join(voice_name.split("-")[:2])
         self.pitch = pitch
         
-def text_to_wav(text: str, filepath: str, voice: Voice):
+def text_to_wav(text: str, outpath: str, voice: Voice):
+    client = tts.TextToSpeechClient()
     text_input = tts.SynthesisInput(text=text)
-    
     voice_params = tts.VoiceSelectionParams(
         language_code=voice.language_code, name=voice.voice_name
     )
     audio_config = tts.AudioConfig(audio_encoding=tts.AudioEncoding.LINEAR16, pitch=voice.pitch)
-
-    client = tts.TextToSpeechClient()
+    
     response = client.synthesize_speech(
         input=text_input, voice=voice_params, audio_config=audio_config
     )
 
-    with open(filepath, "wb") as out:
+    voiceover_outpath = os.path.join(outpath, "voiceover.wav")
+    with open(voiceover_outpath, "wb") as out:
         out.write(response.audio_content)
-        print(f'Generated speech saved to "{filepath}"')
+        print(f'Generated speech saved to "{voiceover_outpath}"')
+        
+def ssml_to_wav(ssml_text: str, voiceover_outpath: str, timestamps_outpath: str, voice: Voice):
+    client = tts.TextToSpeechClient()
+    synthesis_input = tts.SynthesisInput(ssml=ssml_text)
+    voice_params = tts.VoiceSelectionParams(
+        language_code=voice.language_code, name=voice.voice_name
+    )
+    audio_config = tts.AudioConfig(audio_encoding=tts.AudioEncoding.LINEAR16, pitch=voice.pitch)
+    
+    response = client.synthesize_speech(
+        request=tts.SynthesizeSpeechRequest(
+            input=synthesis_input, voice=voice_params, audio_config=audio_config, 
+            enable_time_pointing=[tts.SynthesizeSpeechRequest.TimepointType.SSML_MARK]
+        )
+    )
+
+    marks = [dict(name=t.mark_name, sec=t.time_seconds) for t in response.timepoints]
+    with open(timestamps_outpath, 'w') as out:
+        json.dump(marks, out)
+        print(f'Marks content written to file: {timestamps_outpath}')
+    
+    with open(voiceover_outpath, "wb") as out:
+        out.write(response.audio_content)
+        print(f'Generated speech saved to "{voiceover_outpath}"')
         
 def select_voice():
-    pass
-
-def generate(text: str, filepath: str):
     voices = [Voice("en-US-Wavenet-I"), Voice("en-US-Neural2-D"), 
-              Voice("en-US-Neural2-H"), Voice("en-US-Neural2-I"), 
-              Voice("en-US-Neural2-J")]
-    voice = choice(voices)
-    text_to_wav(text, filepath, voice)
+            Voice("en-US-Neural2-H"), Voice("en-US-Neural2-I"), 
+            Voice("en-US-Neural2-J")]
+    return choice(voices)
+    
+def text_to_ssml(text: str):
+    tokens = []
+    i = 1
+    for word in text.split(" "):
+        tokens.append(word + " <mark name=\"{}\"/>".format((str(i))))
+        i += 1
+    new_text = "<speak>" + " ".join(tokens) + "</speak>"
+    return new_text
+
+def generate(text: str, voiceover_outpath: str, timestamps_outpath: str, voice: Voice):
+    ssml_text = text_to_ssml(text)
+    ssml_to_wav(ssml_text, voiceover_outpath, timestamps_outpath, voice)
