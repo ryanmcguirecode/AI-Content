@@ -176,4 +176,4 @@ def upload_video(video_file: str, title: str, description: str, category: str, k
   except (HttpError):
     print("An HTTP error %d occurred:\n%s")
 
-upload_video("../modified_video.mp4", "test", "test", "22", "test", "public")
+# upload_video("../modified_video.mp4", "test", "test", "22", "test", "public")

@@ -12,6 +12,7 @@ class ContentGenerator:
         os.mkdir(self.destination)
 
         self.paragraphs = self.generate_text()
+        self.paragraph_lengths = [len(par) for par in self.paragraphs]
         self.generate_visuals()
         self.voice = generate_voiceover.select_voice()
         self.generate_audio()
@@ -52,23 +53,24 @@ class ContentGenerator:
             exit()
 
 class ContentGeneratorTest:
-    def __init__(self, topic: str) -> str:
-        self.topic = topic
-        self.destination = os.path.join("generated_content", "fable_pets_12202022_1728")
+    def __init__(self, prompt: str, name: str) -> str:
+        self.prompt = prompt
+        self.destination = os.path.join("generated_content", name + "_" +  datetime.now().strftime("%m%d%Y_%H%M"))
+        os.mkdir(self.destination)
 
-        with open(os.path.join(self.destination, "generated_text.txt"), "r") as f:
-            text = f.read()
-            self.paragraphs = [par.strip() for par in text.split("\n") if par]
-            
-        self.images_directory = os.path.join(self.destination, "images")
-        self.voiceovers_directory = os.path.join(self.destination, "voiceovers")
+        self.paragraphs = self.generate_text()
+        self.paragraph_lengths = [len(par.split(" ")) for par in self.paragraphs]
+        self.generate_visuals()
+        self.voice = generate_voiceover.select_voice()
+        self.generate_audio()
     
-    def generate_story(self) -> list[str]:
-        print("Generating fable about " + self.topic + "...")
+    def generate_text(self) -> list[str]:
+        print("Generating response based on prompt...")
         try:
             filepath = os.path.join(self.destination, "generated_text.txt")
-            text = generate_text.generate('write a short fable about ' + self.topic, filepath)
-            return [par.strip() for par in text.split("\n") if par]
+            with open('/Users/ryanmcguire/Desktop/AI_Content/generated_content/fable_books_12212022_1835/generated_text.txt', "r") as f:
+                self.text = f.read()
+            return [par.strip() for par in self.text.split("\n") if par]
         except:
             print("Error generating text:")
             print_exc()
@@ -88,13 +90,11 @@ class ContentGeneratorTest:
             exit()
     
     def generate_audio(self):
-        print("Generating voiceovers for each paragraph...")
+        print("Generating voiceover and timestamps...")
         try:
-            self.voiceovers_directory = os.path.join(self.destination, "voiceovers")
-            os.mkdir(self.voiceovers_directory)
-            for i, paragraph in enumerate(self.paragraphs):
-                filepath = os.path.join(self.voiceovers_directory, "generated_voiceover_" + str(i) + ".wav")
-                generate_voiceover.generate(paragraph, filepath)
+            voiceover_outpath = os.path.join(self.destination, "generated_voiceover.wav")
+            timestamps_outpath = os.path.join(self.destination, "timestamps.json")
+            generate_voiceover.generate(self.text, voiceover_outpath, timestamps_outpath, self.voice)
         except:
             print("Error generating voiceovers:")
             print_exc()
