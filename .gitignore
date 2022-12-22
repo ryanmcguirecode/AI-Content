@@ -3,3 +3,4 @@ credentials/
 __pycache__/
 generated_content/
 content_resources/
+test.py
