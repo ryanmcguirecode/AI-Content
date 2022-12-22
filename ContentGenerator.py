@@ -12,7 +12,7 @@ class ContentGenerator:
         os.mkdir(self.destination)
 
         self.paragraphs = self.generate_text()
-        self.paragraph_lengths = [len(par) for par in self.paragraphs]
+        self.paragraph_lengths = [len(par.split()) for par in self.paragraphs]
         self.generate_visuals()
         self.voice = generate_voiceover.select_voice()
         self.generate_audio()
@@ -55,7 +55,7 @@ class ContentGenerator:
 class ContentGeneratorTest:
     def __init__(self, prompt: str, name: str) -> str:
         self.prompt = prompt
-        self.destination = "generated_content/fable_style_12202022_2034"
+        self.destination = "generated_content/fable_education_12222022_1147"
         # os.mkdir(self.destination)
 
         self.paragraphs = self.generate_text()

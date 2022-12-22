@@ -45,8 +45,6 @@ def ssml_to_wav(ssml_text: str, voiceover_outpath: str, timestamps_outpath: str,
     )
 
     marks = {t.mark_name : t.time_seconds for t in response.timepoints}
-    # print(response.timepoints)
-    # print(marks)
     with open(timestamps_outpath, 'w') as out:
         json.dump(marks, out)
         print(f'Marks content written to file: {timestamps_outpath}')
@@ -77,6 +75,5 @@ def text_to_ssml(text: str):
 
 def generate(text: str, voiceover_outpath: str, timestamps_outpath: str, voice: Voice):
     ssml_text = text_to_ssml(text)
-    print(ssml_text)
     ssml_to_wav(ssml_text, voiceover_outpath, timestamps_outpath, voice)
     
