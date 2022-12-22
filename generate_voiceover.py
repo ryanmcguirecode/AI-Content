@@ -46,7 +46,7 @@ def ssml_to_wav(ssml_text: str, voiceover_outpath: str, timestamps_outpath: str,
 
     marks = {t.mark_name : t.time_seconds for t in response.timepoints}
     # print(response.timepoints)
-    print(marks)
+    # print(marks)
     with open(timestamps_outpath, 'w') as out:
         json.dump(marks, out)
         print(f'Marks content written to file: {timestamps_outpath}')
@@ -72,10 +72,7 @@ def text_to_ssml(text: str):
             paragraphs[-1].append(word + " <mark name=\"{}\"/>".format((str(i))))
             i += 1
     paragraphs = [" ".join(p) for p in paragraphs]
-    print(paragraphs)
     new_text = "<speak>" + "".join(paragraphs) + "</speak>"
-    # new_text = new_text.replace("\n", '\n<break time="2s"/>')
-    print(new_text)
     return new_text
 
 def generate(text: str, voiceover_outpath: str, timestamps_outpath: str, voice: Voice):
@@ -83,9 +80,3 @@ def generate(text: str, voiceover_outpath: str, timestamps_outpath: str, voice: 
     print(ssml_text)
     ssml_to_wav(ssml_text, voiceover_outpath, timestamps_outpath, voice)
     
-# if __name__ == "__main__":
-#     with open('generated_content/fable_cowboys_12202022_1959/generated_text.txt', 'r') as f:
-#         text = f.read()
-#     # print(text)
-#     print("\n\n\n")
-#     ssml_to_wav("<speak><mark name=\'1st\'/>Hello <mark name=\'2nd\'/>world</speak>", "test.wav", "test2.json", select_voice())

@@ -12,5 +12,5 @@ topics = ['celebrities', 'space', 'philosophy', 'photography', 'health', 'relati
           'world news', 'writing', 'work', 'people']
 topic = choice(topics)
 
-fable_content = ContentGenerator("Write a short fable about " + topic, "fable_" + topic)
+fable_content = ContentGeneratorTest("Write a short fable about " + topic, "fable_" + topic)
 generate_video.generate(fable_content, '/Users/ryanmcguire/Desktop/AI_Content/content_resources/minecraft_relaxing_fireplace.mp3')
