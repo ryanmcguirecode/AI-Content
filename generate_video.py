@@ -1,8 +1,9 @@
-import ContentGenerator
+# from ContentGenerator import ContentGenerator
+# from ContentParameters import ContentParameters
 from constants import SUBTITLE_DIVISION
 
 from moviepy.editor import *
-from moviepy.video.tools.subtitles import SubtitlesClip
+from moviepy.video.fx.all import scroll
 import json
 
 def get_subtitle_groups(words: list[str]):
@@ -15,24 +16,24 @@ def get_subtitle_groups(words: list[str]):
         punctuation_marker= "." in word or "?" in word or "!" in word or "," in word
     return [" ".join(sg) for sg in subtitle_groups]
 
-def generate(cg : ContentGenerator, music_filepath : str):
+def generate(cg, cp):
     
     images = list(filter(lambda f: '.jpg' in f, os.listdir(cg.images_directory)))
     images.sort(key=lambda f: int("".join(filter(str.isdigit, f))))
     
-    voiceover_path = os.path.join(cg.destination, "generated_voiceover.wav")
+    voiceover_path = os.path.join(cg.audio_path, "generated_voiceover.wav")
     voiceover = AudioFileClip(voiceover_path)
-    timestamp_path = os.path.join(cg.destination, "timestamps.json")
+    timestamp_path = os.path.join(cg.audio_path, "timestamps.json")
     with open(timestamp_path, "r") as f:
         timestamps = json.load(f)
     
-    music = AudioFileClip(music_filepath).subclip(0, voiceover.duration).volumex(0.5)
+    ms = cg.music.music_start
+    music = AudioFileClip(cg.music.music_filepath).subclip(ms, ms + voiceover.duration).volumex(.1)
     full_audio = CompositeAudioClip([voiceover, music])
     
     image_clips = []
     seen_words = 0
     prev_time = 0
-    
     
     for i in range(len(images)):
         image_path = os.path.join(cg.images_directory, images[i])
@@ -40,6 +41,7 @@ def generate(cg : ContentGenerator, music_filepath : str):
         image_duration = timestamps[str(seen_words)] - prev_time
         prev_time = timestamps[str(seen_words)]
         image_clip = ImageClip(image_path).set_duration(image_duration)
+        image_clip = scroll(image_clip, w=608, h=1080, x_speed=((1080 - 608) / image_duration))
         image_clips.append(image_clip)
         
     text_clips = []
@@ -55,11 +57,9 @@ def generate(cg : ContentGenerator, music_filepath : str):
         prev_time = timestamps[str(seen_words)]
         text_clips.append(text_clip)
 
-    full_image_video = concatenate_videoclips(image_clips).crop(x_center=540 , y_center=540,
-                    width=607.5, height=1080).resize(newsize=(1080,1920))
+    full_image_video = concatenate_videoclips(image_clips).resize(newsize=(1080,1920))
     full_text_clips = concatenate_videoclips(text_clips).set_pos(("center", 1320))
-    # TODO: Make video 1080x1920 pixels
+    
     final_video = CompositeVideoClip([full_image_video, full_text_clips]).set_audio(full_audio)
-
-    final_video.write_videofile(os.path.join(cg.destination, "final_video.mp4"), codec='libx264', audio_codec='aac', fps=6, threads=4, logger=None)
+    final_video.write_videofile(os.path.join(cg.destination, "final_video.mp4"), codec='libx264', audio_codec='aac', fps=30, threads=4, logger=None)
     

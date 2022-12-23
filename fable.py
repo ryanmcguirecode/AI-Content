@@ -1,5 +1,7 @@
-from ContentGenerator import ContentGenerator, ContentGeneratorTest
-import generate_video
+from ContentGenerator import ContentGenerator
+from ContentGeneratorTest import ContentGeneratorTest
+from ContentParameters import ContentParameters
+from Music import Music
 
 from random import choice
 
@@ -12,5 +14,11 @@ topics = ['celebrities', 'space', 'philosophy', 'photography', 'health', 'relati
           'world news', 'writing', 'work', 'people']
 topic = choice(topics)
 
-fable_content = ContentGenerator("Write a short fable about " + topic, "fable_" + topic)
-generate_video.generate(fable_content, '/Users/ryanmcguire/Desktop/AI_Content/content_resources/motivating_uplifting.mp3')
+prompt = "Write a short fable about " + topic
+name = topic
+content_identifier = "generated-image-slideshow" 
+music = Music('/Users/ryanmcguire/Desktop/AI_Content/content_resources/motivating_uplifting.mp3', 'motivating_uplifting', 0)
+
+content_parameters = ContentParameters(prompt, name, content_identifier)
+fable_content = ContentGenerator(content_parameters, music)
+# generate_video.generate(fable_content, '/Users/ryanmcguire/Desktop/AI_Content/content_resources/motivating_uplifting.mp3')

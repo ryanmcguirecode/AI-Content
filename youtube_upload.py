@@ -36,7 +36,7 @@ RETRIABLE_STATUS_CODES = [500, 502, 503, 504]
 #   https://developers.google.com/youtube/v3/guides/authentication
 # For more information about the client_secrets.json file format, see:
 #   https://developers.google.com/api-client-library/python/guide/aaa_client_secrets
-CLIENT_SECRETS_FILE = "client_secrets.json"
+CLIENT_SECRETS_FILE = os.path.abspath("./credentials/client_secrets.json")
 
 # This OAuth 2.0 access scope allows an application to upload files to the
 # authenticated user's YouTube channel, but doesn't allow other types of access.
@@ -59,8 +59,7 @@ https://console.cloud.google.com/
 
 For more information about the client_secrets.json file format, please visit:
 https://developers.google.com/api-client-library/python/guide/aaa_client_secrets
-""" % os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                   CLIENT_SECRETS_FILE))
+""" % os.path.abspath(CLIENT_SECRETS_FILE)
 
 VALID_PRIVACY_STATUSES = ("public", "private", "unlisted")
 
@@ -176,4 +175,4 @@ def upload_video(video_file: str, title: str, description: str, category: str, k
   except (HttpError):
     print("An HTTP error %d occurred:\n%s")
 
-# upload_video("../modified_video.mp4", "test", "test", "22", "test", "public")
+upload_video("/Users/ryanmcguire/Desktop/AI_Content/generated_content/fable_education_12222022_1147/final_video.mp4", "The power of knowledge", "Fable about the power of knowledge", "kids", "kids", "public")

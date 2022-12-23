@@ -4,7 +4,7 @@ import json
 from random import choice
 
 import os
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="./credentials/key.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./credentials/key.json"
 
 class Voice:
     def __init__(self, voice_name, pitch=0):
