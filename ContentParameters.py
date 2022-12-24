@@ -1,10 +1,10 @@
 import os
 import csv
 from constants import CONTENT_TYPE_PARAMETERS as CTP
+from generate_prompt import Prompt
 
 class ContentParameters:
-    def __init__(self, prompt: str, name: str, content_identifier: str):
-        self.prompt = prompt
+    def __init__(self, name: str, content_identifier: str):
         self.name = name
         self.content_identifier = content_identifier
 

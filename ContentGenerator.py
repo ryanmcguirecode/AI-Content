@@ -8,11 +8,12 @@ import generate_text
 import generate_image
 import generate_video
 from helper_functions import generate_content_name
+from generate_prompt import Prompt
 
 class ContentGenerator:
-    def __init__(self, cp: ContentParameters, music: Music = None) -> str:
+    def __init__(self, prompt : Prompt, cp: ContentParameters, music: Music = None) -> str:
         self.content_parameters = cp
-        self.prompt = cp.prompt
+        self.prompt = prompt
         self.music = music
         
         self.destination = generate_content_name(cp.name)
@@ -80,7 +81,7 @@ class ContentGenerator:
             os.mkdir(self.images_directory)
             for i, paragraph in enumerate(self.paragraphs):
                 filepath = os.path.join(self.images_directory, "generated_image_" + str(i) + ".jpg")
-                generate_image.generate(paragraph, filepath)
+                generate_image.generate(paragraph, self.prompt, filepath)
         except:
             print("Error generating DALL-E image")
             print_exc()
