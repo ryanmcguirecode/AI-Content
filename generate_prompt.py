@@ -8,7 +8,7 @@ story_subjects = ['monkeys', 'men', 'mice', 'wolves', 'elves', 'goblins', 'dwarv
 'dragons', 'gods', 'demons', 'angels', 'ghosts', 'spirits', 'switches', 'warlocks', 'wizards', 
 'sorcerers', 'sorceresses', ]
 
-adjectives = ['sleepy', 'weird', 'crazy', 'goofy', 'ghoulish', 'zany', 'serious', 'mysterious', 'fun', 'wild']
+# adjectives = ['sleepy', 'weird', 'crazy', 'goofy', 'ghoulish', 'zany', 'serious', 'mysterious', 'fun', 'wild']
 
 story_types = ['story', 'tale', 'fable', 'legend', 'myth', 'epic', 'poem', 'haiku', 'ballad', 'ode', 
 'rhyme', 'riddle', 'proverb', 'fairy tale', 'folk tale', 'narrative', 'narrative poem', 'narrative rhyme',
@@ -35,16 +35,15 @@ art_style = ['cartoon', 'cyberpunk', 'steampunk', 'black and white', 'color', 'g
  'stylized sketch', 'stylized sketchy']
 
 class Prompt:
-    def __init__(self, story_type, adjective, story_setting, story_subject):
+    def __init__(self, story_type, story_setting, story_subject):
         self.story_type = story_type
-        self.adjective = adjective
         self.story_setting = story_setting
         self.story_subject = story_subject
-        self.prompt = 'Write a ' + story_type + ' about ' + adjective + ' ' + story_subject + ' in a ' + story_setting + '.'
+        self.text = 'Write a ' + story_type + ' about ' + story_subject + ' in a ' + story_setting + ' in under 200 words.'
 
 # Returns the content for story generation
 def get_content():
-    return Prompt(random.choice(story_types), random.choice(adjectives), random.choice(story_settings), random.choice(story_subjects))
+    return Prompt(random.choice(story_types), random.choice(story_settings), random.choice(story_subjects))
 
 # Returns the art style for the video
 def get_art_style():

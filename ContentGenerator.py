@@ -11,7 +11,9 @@ from helper_functions import generate_content_name
 from generate_prompt import Prompt
 
 class ContentGenerator:
+    """ Generates all necesary content for video based on ContentParameters """
     def __init__(self, prompt : Prompt, cp: ContentParameters, music: Music = None) -> str:
+    
         self.content_parameters = cp
         self.prompt = prompt
         self.music = music
@@ -29,6 +31,8 @@ class ContentGenerator:
         self.generate_video()
     
     def initialize_text(self):
+        """ Generate or retrive text content of video """
+        
         if self.content_parameters.text_content == "chat-gpt-generated":
             self.generate_chatgpt_text()
             self.get_paragraphs()
@@ -38,6 +42,8 @@ class ContentGenerator:
             raise Exception("Other text types not implemented yet.")
         
     def initialize_audio(self):
+        """ Generate or retrive audio content of video """
+        
         if "google-tts" in self.content_parameters.audio_content:
             self.voice = generate_voiceover.select_voice()
             self.generate_google_tts_voiceover()
@@ -48,22 +54,28 @@ class ContentGenerator:
             assert self.music != None
     
     def initialize_visuals(self):
+        """ Generate or retrive visual content of video """
+        
         if self.content_parameters.visual_content == "dalle_paragraph_generated":
             self.generate_dalle_paragraph_images()
         else:
             raise Exception("Other visual types not implemented yet.")
     
     def generate_chatgpt_text(self) -> list[str]:
+        """ Generate ChatGPT response based on prompt """
+        
         print("Generating ChatGPT response based on prompt...")
         try:
             filepath = os.path.join(self.destination, "generated_text.txt")
-            self.text = generate_text.generate(self.prompt, filepath)
+            self.text = generate_text.generate(self.prompt.text, filepath)
         except:
             print("Error generating text:")
             print_exc()
             exit()
             
     def generate_google_tts_voiceover(self):
+        """ Generate Google TTS voiceover and subtitle timestamps based on text """
+        
         print("Generating Google TTS voiceover and timestamps...")
         try:
             voiceover_outpath = os.path.join(self.audio_path, "generated_voiceover.wav")
@@ -75,6 +87,8 @@ class ContentGenerator:
             exit()
             
     def generate_dalle_paragraph_images(self):
+        """ Generate DALL-E images for each paragraph """
+        
         print("Generating images for each paragraph...")
         try:
             self.images_directory = os.path.join(self.visuals_path, "images")
@@ -88,6 +102,8 @@ class ContentGenerator:
             exit()
             
     def generate_video(self):
+        """ Generate final video based on all content """
+        
         print("Generating final video...")
         try:
             if self.content_parameters.content_identifier == "generated-image-slideshow":
@@ -100,4 +116,5 @@ class ContentGenerator:
             exit()
             
     def get_paragraphs(self):
+        """ Get paragraphs based on text """
         self.paragraphs = [par.strip() for par in self.text.split("\n") if par]

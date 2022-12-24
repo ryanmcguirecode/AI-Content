@@ -7,6 +7,8 @@ from moviepy.video.fx.all import scroll
 import json
 
 def get_subtitle_groups(words: list[str]):
+    """ Generate subtitle groups from list of words """
+    
     subtitle_groups = [[]]
     punctuation_marker = False
     for word in words:
@@ -17,6 +19,8 @@ def get_subtitle_groups(words: list[str]):
     return [" ".join(sg) for sg in subtitle_groups]
 
 def generate(cg, cp):
+    """ Generate video from generated content and content parameters """
+    
     images = list(filter(lambda f: '.jpg' in f, os.listdir(cg.images_directory)))
     images.sort(key=lambda f: int("".join(filter(str.isdigit, f))))
     
