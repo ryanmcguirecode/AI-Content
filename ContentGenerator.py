@@ -116,4 +116,5 @@ class ContentGenerator:
             
     def get_paragraphs(self):
         """ Get paragraphs based on text """
+        
         self.paragraphs = [par.strip() for par in self.text.split("\n") if par]
