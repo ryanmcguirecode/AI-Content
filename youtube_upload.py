@@ -17,7 +17,6 @@ httplib2.RETRIES = 1
 MAX_RETRIES = 0
 RETRIABLE_EXCEPTIONS = (httplib2.HttpLib2Error, IOError)
 RETRIABLE_STATUS_CODES = [500, 502, 503, 504]
-CLIENT_SECRETS_FILE = os.path.abspath("./credentials/story_forge_1/client_secrets.json")
 
 YOUTUBE_UPLOAD_SCOPE = "https://www.googleapis.com/auth/youtube.upload"
 YOUTUBE_API_SERVICE_NAME = "youtube"
@@ -26,19 +25,22 @@ YOUTUBE_API_VERSION = "v3"
 MISSING_CLIENT_SECRETS_MESSAGE = ""
 VALID_PRIVACY_STATUSES = ("public", "private", "unlisted")
 
-def get_authenticated_service(args):
-    flow = flow_from_clientsecrets(CLIENT_SECRETS_FILE,
+def get_authenticated_service(args, account):
+    client_secrets_filepath = os.path.join(".", "credentials", account, "client_secrets.json")
+    oauth2_filepath = os.path.join(".", "credentials", account, "oauth2.json")
+    
+    flow = flow_from_clientsecrets(client_secrets_filepath,
         scope=YOUTUBE_UPLOAD_SCOPE,
         message=MISSING_CLIENT_SECRETS_MESSAGE)
 
-    storage = Storage(os.path.join(".", "credentials", "oauth2.json"))
+    storage = Storage(oauth2_filepath)
     credentials = storage.get()
     
-    # if credentials is None or credentials.invalid:
-    #     credentials = run_flow(flow, storage, args)
+    if credentials is None or credentials.invalid:
+        credentials = run_flow(flow, storage, args)
 
-    # return build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-    #     http=credentials.authorize(httplib2.Http()))
+    return build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
+        http=credentials.authorize(httplib2.Http()))
 
 def initialize_upload(youtube, options):
     tags = None
@@ -76,7 +78,7 @@ def resumable_upload(insert_request):
             status, response = insert_request.next_chunk()
             if response is not None:
                 if 'id' in response:
-                    print("Video id '%s' was successfully uploaded. " + response['id'])
+                    print("Video id {0} was successfully uploaded. ".format(response['id']))
                 else:
                     exit("The upload failed with an unexpected response: %s" % response)
         except HttpError: 
@@ -94,23 +96,20 @@ def resumable_upload(insert_request):
             time.sleep(sleep_seconds)
 
 
-
-# def upload_video(video_file: str, title: str, description: str, category: str, keywords: str, privacyStatus: str):
-#   args = argparser
-#   args.file = video_file
-#   args.title = title
-#   args.description = description
-#   args.category = category
-#   args.keywords = keywords
-#   args.privacyStatus = privacyStatus
-#   argparser.parse_args()
-#   youtube = get_authenticated_service(args)
-#   try:
-#     initialize_upload(youtube, args)
-#   except (HttpError):
-#     print("An HTTP error %d occurred:\n%s")
-
-# upload_video("../modified_video.mp4", "knowledge is beautiful", "#fable", "22", "test", "public")
+def upload_video(account: str, video_file: str, title: str ="Test Title", description: str ="Test Desctiption", category: str ="22", keywords: str ="", privacy_status: str ="public"):
+    args = argparser
+    args.file = video_file
+    args.title = title
+    args.description = description
+    args.category = category
+    args.keywords = keywords
+    args.privacyStatus = privacy_status
+    argparser.parse_args()
+    youtube = get_authenticated_service(args, account)
+    try:
+        initialize_upload(youtube, args)
+    except (HttpError):
+        print("An HTTP error %d occurred:\n%s")
 
 
 # if __name__ == '__main__':

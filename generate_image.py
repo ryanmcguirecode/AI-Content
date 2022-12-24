@@ -5,6 +5,8 @@ from credentials.open_ai import API_KEY
 openai.api_key = API_KEY
 
 def generate(text: str, filepath: str):
+    """ Generate DALL-E image based on prompt, save to filepath """
+    
     response = openai.Image.create(
         prompt=text,
         n=1,
