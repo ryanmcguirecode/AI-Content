@@ -14,11 +14,10 @@ topics = ['celebrities', 'space', 'philosophy', 'photography', 'health', 'relati
           'world news', 'writing', 'work', 'people']
 topic = choice(topics)
 
-prompt = "Write a short fable about " + topic
+prompt = "Write a short fable about " + topic + " under 200 words"
 name = topic
 content_identifier = "generated-image-slideshow" 
 music = Music('/Users/ryanmcguire/Desktop/AI_Content/content_resources/motivating_uplifting.mp3', 'motivating_uplifting', 0)
 
 content_parameters = ContentParameters(prompt, name, content_identifier)
 fable_content = ContentGenerator(content_parameters, music)
-# generate_video.generate(fable_content, '/Users/ryanmcguire/Desktop/AI_Content/content_resources/motivating_uplifting.mp3')

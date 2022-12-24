@@ -1,6 +1,6 @@
 # from ContentGenerator import ContentGenerator
 # from ContentParameters import ContentParameters
-from constants import SUBTITLE_DIVISION
+from constants import SUBTITLE_DIVISION as SD, FINAL_VIDEO_HEIGHT as FVH, FINAL_VIDEO_WIDTH as FVW, VIDEO_FPS as FPS
 
 from moviepy.editor import *
 from moviepy.video.fx.all import scroll
@@ -10,14 +10,13 @@ def get_subtitle_groups(words: list[str]):
     subtitle_groups = [[]]
     punctuation_marker = False
     for word in words:
-        if len(subtitle_groups[-1]) >= SUBTITLE_DIVISION or punctuation_marker:
+        if len(subtitle_groups[-1]) >= SD or punctuation_marker:
             subtitle_groups.append([])
         subtitle_groups[-1].append(word)
         punctuation_marker= "." in word or "?" in word or "!" in word or "," in word
     return [" ".join(sg) for sg in subtitle_groups]
 
 def generate(cg, cp):
-    
     images = list(filter(lambda f: '.jpg' in f, os.listdir(cg.images_directory)))
     images.sort(key=lambda f: int("".join(filter(str.isdigit, f))))
     
@@ -57,9 +56,10 @@ def generate(cg, cp):
         prev_time = timestamps[str(seen_words)]
         text_clips.append(text_clip)
 
-    full_image_video = concatenate_videoclips(image_clips).resize(newsize=(1080,1920))
+    full_image_video = concatenate_videoclips(image_clips).resize(newsize=(FVW,FVH))
     full_text_clips = concatenate_videoclips(text_clips).set_pos(("center", 1320))
     
     final_video = CompositeVideoClip([full_image_video, full_text_clips]).set_audio(full_audio)
-    final_video.write_videofile(os.path.join(cg.destination, "final_video.mp4"), codec='libx264', audio_codec='aac', fps=30, threads=4, logger=None)
+    final_video.write_videofile(os.path.join(cg.destination, "final_video.mp4"), codec='libx264', audio_codec='aac', fps=FPS, threads=4)
+    
     
