@@ -96,7 +96,11 @@ def resumable_upload(insert_request):
             time.sleep(sleep_seconds)
 
 
-def upload_video(account: str, video_file: str, title: str ="Test Title", description: str ="Test Desctiption", category: str ="22", keywords: str ="", privacy_status: str ="public"):
+def upload_video(account: str, video_file: str, title: str ="Test Title", 
+                 description: str ="Test Desctiption", category: str ="22", 
+                 keywords: str ="", privacy_status: str ="public"):
+    """ Upload video to YouTube based on passed in parameters """
+    
     args = argparser
     args.file = video_file
     args.title = title
