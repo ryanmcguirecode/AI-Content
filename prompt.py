@@ -1,14 +1,12 @@
 import random
-# from moviepy.editor import *
+from constants import MAX_GPT_WORDS
 
 story_subjects = ['monkeys', 'men', 'mice', 'wolves', 'elves', 'goblins', 'dwarves', 'orcs', 'trolls', 'golems',
 'gargoyles', 'dragons', 'gods', 'demons', 'angels', 'ghosts', 'spirits', 'witches', 'warlocks', 'wizards', 
 'sorcerers', 'sorceresses', 'necromancers', 'necromanceresses', 'vampires', 'werewolves', 'zombies',
 'men', 'mice', 'wolves', 'elves', 'goblins', 'dwarves', 'orcs', 'trolls', 'golems', 'gargoyles', 
 'dragons', 'gods', 'demons', 'angels', 'ghosts', 'spirits', 'switches', 'warlocks', 'wizards', 
-'sorcerers', 'sorceresses', ]
-
-# adjectives = ['sleepy', 'weird', 'crazy', 'goofy', 'ghoulish', 'zany', 'serious', 'mysterious', 'fun', 'wild']
+'sorcerers', 'sorceresses']
 
 story_types = ['story', 'tale', 'fable', 'legend', 'myth', 'epic', 'poem', 'haiku', 'ballad', 'ode', 
 'rhyme', 'riddle', 'proverb', 'fairy tale', 'folk tale', 'narrative', 'narrative poem', 'narrative rhyme',
@@ -34,17 +32,43 @@ art_style = ['cartoon', 'cyberpunk', 'steampunk', 'black and white', 'color', 'g
 'stylized oil painting', 'stylized acrylic painting', 'stylized charcoal drawing', 'stylized pencil drawing', 'stylized ink drawing',
  'stylized sketch', 'stylized sketchy']
 
-class Prompt:
-    def __init__(self, story_type, story_setting, story_subject):
-        self.story_type = story_type
-        self.story_setting = story_setting
-        self.story_subject = story_subject
-        self.text = 'Write a ' + story_type + ' about ' + story_subject + ' in a ' + story_setting + ' in under 200 words.'
+class StoryPrompt:
+    def __init__(self, category, subject=None, setting=None):
+        self.category = category
+        self.subject = subject
+        self.setting = setting
+        if self.subject and self.setting:
+            self.text = 'Write a ' + category + ' about ' + subject + ' in a ' + setting + ' in under {0} words.'.format(MAX_GPT_WORDS)
+        elif self.subject:
+            self.text = 'Write a ' + category + ' about ' + subject + ' in under {0} words.'.format(MAX_GPT_WORDS)
+        elif self.setting:
+            self.text = 'Write a ' + category + ' set in ' + setting + ' in under {0} words.'.format(MAX_GPT_WORDS)
+        else:
+            self.text = 'Write a ' + category + ' in under {0} words.'.format(MAX_GPT_WORDS)
+    
+    def generate_image_prompt(self, text, art_style):
+        """ Returns the prompt to generate image for given text in art style """
+        
+        if self.subject and self.setting:
+            text_prompt = "{0} in {1}".format(self.subject, self.setting)
+        elif self.subject:
+            text_prompt = self.subject
+        elif self.setting:
+            text_prompt = self.setting
+        else:
+           text_prompt = ""
+        
+        if art_style:
+            return text_prompt + " in style " + art_style + text
+        else:
+            return text_prompt + text
 
-# Returns the content for story generation
-def get_content():
-    return Prompt(random.choice(story_types), random.choice(story_settings), random.choice(story_subjects))
+def random_story_prompt():
+    """ Returns the content for story generation """
+    
+    return StoryPrompt(random.choice(story_types), random.choice(story_settings), random.choice(story_subjects))
 
-# Returns the art style for the video
-def get_art_style():
+def random_art_style():
+    """ Returns the art style for the video """
+    
     return random.choice(art_style)

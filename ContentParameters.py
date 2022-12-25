@@ -1,14 +1,18 @@
 import os
 import csv
 from constants import CONTENT_TYPE_PARAMETERS as CTP
-from generate_prompt import Prompt
+from prompt import StoryPrompt
 
 class ContentParameters:
     """ Stores all parameters for content generation """
-    def __init__(self, name: str, content_identifier: str):
+    
+    def __init__(self, name: str, content_identifier: str, story_prompt: StoryPrompt =None, music: str =None, art_style: str = None):
         
         self.name = name
         self.content_identifier = content_identifier
+        self.story_prompt = story_prompt
+        self.music = music
+        self.art_style = art_style
 
         with open(os.path.join("content_settings", "parameters.csv"), "r") as f:
             reader = csv.reader(f)

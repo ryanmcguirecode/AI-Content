@@ -2,21 +2,17 @@ import os
 from traceback import print_exc, format_exc
 
 from ContentParameters import ContentParameters
-from Music import Music
 import generate_voiceover
 import generate_text
 import generate_image
 import generate_video
 from helper_functions import generate_content_name
-from generate_prompt import Prompt
 
 class ContentGenerator:
     """ Generates all necesary content for video based on ContentParameters """
-    def __init__(self, prompt : Prompt, cp: ContentParameters, music: Music = None) -> str:
+    def __init__(self, cp: ContentParameters) -> str:
     
         self.content_parameters = cp
-        self.prompt = prompt
-        self.music = music
         
         self.destination = generate_content_name(cp.name)
         os.mkdir(self.destination)
@@ -51,7 +47,7 @@ class ContentGenerator:
             raise Exception("Other audio types not implemented yet.")
         
         if "music" in self.content_parameters.audio_content:
-            assert self.music != None
+            assert self.content_parameters.music != None
     
     def initialize_visuals(self):
         """ Generate or retrive visual content of video """
@@ -67,7 +63,7 @@ class ContentGenerator:
         print("Generating ChatGPT response based on prompt...")
         try:
             filepath = os.path.join(self.destination, "generated_text.txt")
-            self.text = generate_text.generate(self.prompt.text, filepath)
+            self.text = generate_text.generate(self.content_parameters.story_prompt.text, filepath)
         except:
             print("Error generating text:")
             print_exc()
@@ -95,7 +91,8 @@ class ContentGenerator:
             os.mkdir(self.images_directory)
             for i, paragraph in enumerate(self.paragraphs):
                 filepath = os.path.join(self.images_directory, "generated_image_" + str(i) + ".jpg")
-                generate_image.generate(paragraph, self.prompt, filepath)
+                image_prompt = self.content_parameters.story_prompt.generate_image_prompt(paragraph, self.content_parameters.art_style)
+                generate_image.generate(image_prompt, filepath)
         except:
             print("Error generating DALL-E image")
             print_exc()

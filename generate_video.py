@@ -30,8 +30,8 @@ def generate(cg, cp):
     with open(timestamp_path, "r") as f:
         timestamps = json.load(f)
     
-    ms = cg.music.music_start
-    music = AudioFileClip(cg.music.music_filepath).subclip(ms, ms + voiceover.duration).volumex(.1)
+    ms = cp.music.music_start
+    music = AudioFileClip(cp.music.music_filepath).subclip(ms, ms + voiceover.duration).volumex(.1)
     full_audio = CompositeAudioClip([voiceover, music])
     
     image_clips = []
