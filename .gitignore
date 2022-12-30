@@ -4,4 +4,5 @@ __pycache__/
 generated_content/
 content_resources/
 test.py
+test2.py
 ContentGeneratorTest.py
