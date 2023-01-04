@@ -13,6 +13,8 @@ class ContentParameters:
         self.story_prompt = story_prompt
         self.music = music
         self.art_style = art_style
+        # TEMPORARY
+        self.bottom_video_path = "/Users/ryanmcguire/Desktop/AI_Content/content_resources/minecraft_parkour.mp4"
 
         with open(os.path.join("content_settings", "parameters.csv"), "r") as f:
             reader = csv.reader(f)

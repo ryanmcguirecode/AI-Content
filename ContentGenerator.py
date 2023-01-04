@@ -105,6 +105,8 @@ class ContentGenerator:
         try:
             if self.content_parameters.content_identifier == "generated-image-slideshow":
                 generate_video.generate(self, self.content_parameters)
+            elif self.content_parameters.content_identifier == "generated-image-slideshow-with-video":
+                generate_video.generate2(self, self.content_parameters)
             else:
                 raise Exception("Other video types not implemented yet.")
         except:
