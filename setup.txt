@@ -1,0 +1,5 @@
+#! /bin/bash
+pip install git+https://github.com/mmabrouk/chatgpt-wrapper
+pip install -r requirements.txt
+playwright install firefox
+chatgpt install
