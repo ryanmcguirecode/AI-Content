@@ -57,6 +57,9 @@ class ImageSlideshowGenerator(ContentGenerator):
                 image_prompt = self.content_parameters.story_prompt.generate_image_prompt(
                     paragraph, self.content_parameters.art_style
                 )
+                # image_prompt = self.content_parameters.story_prompt.generate_image_prompt(
+                #     "", self.content_parameters.art_style
+                # )
                 generate_image.generate(image_prompt, filepath)
         except:
             print("Error generating DALL-E image")

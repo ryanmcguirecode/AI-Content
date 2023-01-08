@@ -26,6 +26,7 @@ class ImageSlideshowBottomVideoGenerator(ImageSlideshowGenerator):
         full_audio = CompositeAudioClip([self.voiceover, music_audio])
         
         image_clips = generate_image_imageclips(self, self.content_parameters)
+        image_clips = [clip.resize(height=1080) for clip in image_clips]
         text_clips = generate_subtitle_textclips(self, self.content_parameters)
 
         full_image_video = concatenate_videoclips(image_clips)
