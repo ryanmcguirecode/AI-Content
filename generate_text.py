@@ -7,5 +7,5 @@ def generate(prompt: str, filepath: str):
     bot = ChatGPT()
     response = bot.ask(prompt)
     with open(filepath, "w") as f:
-        f.write(response.strip())
+        f.write(response.strip().replace("\"", ""))
     return response

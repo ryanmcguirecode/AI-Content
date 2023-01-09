@@ -13,7 +13,7 @@ class Voice:
         self.language_code = "-".join(voice_name.split("-")[:2])
         self.pitch = pitch
         
-def text_to_ssml(text: str):
+def text_to_ssml(text: str, sentence_pause:float =0):
     """ Convert plain text to ssml format """
     
     paragraphs = []
@@ -25,6 +25,8 @@ def text_to_ssml(text: str):
             i += 1
     paragraphs = [" ".join(p) for p in paragraphs]
     new_text = "<speak>" + "".join(paragraphs) + "</speak>"
+    if sentence_pause > 0:
+        new_text = new_text.replace(".", ".<break time=\"{0}s\"/>".format(sentence_pause))
     return new_text
     
         
@@ -83,9 +85,11 @@ def ssml_to_wav(ssml_text: str, voiceover_outpath: str, timestamps_outpath: str,
         print(f'Generated speech saved to "{voiceover_outpath}"')
     
 
-def generate(text: str, voiceover_outpath: str, timestamps_outpath: str, voice: Voice):
+def generate(text: str, voiceover_outpath: str, timestamps_outpath: str, voice: Voice, 
+             sentence_pause: float=0):
     """ Generate voiceover and timestamps from text, save to respective outpaths """
     
-    ssml_text = text_to_ssml(text)
+    ssml_text = text_to_ssml(text, sentence_pause=sentence_pause)
+    print(ssml_text)
     ssml_to_wav(ssml_text, voiceover_outpath, timestamps_outpath, voice)
     

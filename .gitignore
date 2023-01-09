@@ -5,4 +5,5 @@ generated_content/
 content_resources/
 test.py
 test2.py
+test3.py
 ContentGeneratorTest.py

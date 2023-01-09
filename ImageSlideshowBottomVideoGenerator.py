@@ -51,14 +51,9 @@ class ImageSlideshowBottomVideoGenerator(ImageSlideshowGenerator):
         
         print("Final video saved to " + video_outpath)
         
-class ImageSlideshowBottomVideoGeneratorTest(ImageSlideshowGenerator):
+class ImageSlideshowBottomVideoGeneratorTest(ImageSlideshowBottomVideoGenerator):
     def __init__(self, cp: ContentParameters) -> str:
-        self.content_parameters = cp
-
-        self.initialize_text()
-        self.initialize_audio()
-        self.initialize_visuals()
-        self.generate_video()
+        super().__init__(cp)
         self.destination = "generated_content/test_video_01052023_1903"
         
     def initialize_text(self):
@@ -70,39 +65,3 @@ class ImageSlideshowBottomVideoGeneratorTest(ImageSlideshowGenerator):
     def initialize_visuals(self):
         pass
     
-    def generate_video(self):
-        """ Generate and save final video based on all content """
-        
-        print("Generating final video...")
-        
-        self.voiceover = generate_voiceover_audiofileclip(self, self.content_parameters)
-        self.timestamps = get_timestamps(self, self.content_parameters)
-        
-        self.content_parameters.music.music_duration = self.voiceover.duration
-        music_audio = generate_music_audiofileclip(self, self.content_parameters)
-        full_audio = CompositeAudioClip([self.voiceover, music_audio])
-        
-        image_clips = generate_image_imageclips(self, self.content_parameters)
-        text_clips = generate_subtitle_textclips(self, self.content_parameters)
-
-        full_image_video = concatenate_videoclips(image_clips)
-        
-        bottom_video = self.content_parameters.video
-        bottom_video_clip = VideoFileClip(bottom_video.filepath).without_audio()
-        st = bottom_video.start_time
-        bottom_video_clip = bottom_video_clip.subclip(st, st + full_image_video.duration)
-        bottom_video_clip = bottom_video_clip.resize(height=(FVH - full_image_video.size[1]))
-        offset = (bottom_video_clip.size[0] - 1080) // 2
-        bottom_video_clip = bottom_video_clip.crop(
-            x1=offset, y1=0, x2=(offset + FVW), y2=bottom_video_clip.size[1]
-        )
-        
-        full_video = clips_array([[full_image_video], 
-                                  [bottom_video_clip]])
-        full_text_clips = concatenate_videoclips(text_clips).set_pos(("center", 800))
-        
-        self.final_video = CompositeVideoClip([full_video, full_text_clips]).set_audio(full_audio)
-        video_outpath = os.path.join(self.destination, "final_video.mp4")
-        save_video(self.final_video, video_outpath)
-        
-        print("Final video saved to " + video_outpath)
