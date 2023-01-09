@@ -54,9 +54,12 @@ class ImageSlideshowGenerator(ContentGenerator):
             os.mkdir(self.images_directory)
             for i, paragraph in enumerate(self.paragraphs):
                 filepath = os.path.join(self.images_directory, "generated_image_" + str(i) + ".jpg")
-                image_prompt = self.content_parameters.story_prompt.generate_image_prompt(
-                    paragraph, self.content_parameters.art_style
-                )
+                if self.content_parameters.image_gen_type == "set":
+                    image_prompt = self.content_parameters.image_prompt
+                else:
+                    image_prompt = self.content_parameters.story_prompt.generate_image_prompt(
+                        paragraph, self.content_parameters.art_style
+                    )
                 # image_prompt = self.content_parameters.story_prompt.generate_image_prompt(
                 #     "", self.content_parameters.art_style
                 # )

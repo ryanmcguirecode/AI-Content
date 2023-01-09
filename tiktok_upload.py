@@ -43,13 +43,52 @@ from auto_user_functions import *
 #     p.click()
 #     sleep(random() + 10)
 
-def get_f_coords():
+def get_f_coords(text):
+    p.keyDown("command")
+    sleep(random_time(.2, .2))
+    p.press("f")
+    sleep(random_time(.2, .2))
+    p.keyUp("command")
+    p.typewrite(text)
+    sleep(random_time(2.5, 1))
+    
     im = p.screenshot()
     w, h = p.size()
     for x in range(w * 2):
         for y in range(h * 2):
             if im.getpixel((x, y)) == FIND_COLOR:
                 return (x // 2, y // 2)
+    return (-1, -1)
+
+def is_logged_out():
+    im = p.screenshot()
+    x, y = TT_LOG_IN_BUTTON
+    if im.getpixel((x * 2, y * 2)) == TT_LOG_IN_BUTTON_COLOR:
+        return True
+    return False
+
+def login(username):
+    x, y = TT_LOG_IN_BUTTON
+    move_and_click(x, y, random_time(.4, .5))
+    sleep(random_time(2, 5))
+    
+    x, y = TT_CONTINUE_WITH_GOOGLE
+    move_and_click(x, y, random_time(.4, .5))
+    sleep(random_time(6, 4))
+    
+    x, y = get_f_coords(username)
+    if (x, y) == (-1, -1):
+        raise Exception("Not logged in to user " + username)
+    move_and_click(x, y, random_time(.4, 1))
+    sleep(random_time(12, 6))
+    
+def is_fullscreen():
+    im = p.screenshot()
+    for i in range(len(CHROME_FULLSCREEN_TEST)):
+        x, y = CHROME_FULLSCREEN_TEST[i]
+        if not im.getpixel((x * 2, y * 2)) == CHROME_FULLSCREEN_TEST_COLORS[i]:
+            return False
+    return True
 
 def select_file(filepath):
     """ Selects file at 'filepath' in file dialog using keyboard """
@@ -77,7 +116,7 @@ def type_caption(caption):
             sleep(random_time(.5, .1))
     p.press("backspace")
     
-def launch_chrome(go_fullscreen=False):
+def launch_chrome():
     p.keyDown("command")
     p.press("space")
     sleep(1.5)
@@ -88,7 +127,21 @@ def launch_chrome(go_fullscreen=False):
     p.hotkey('enter')
     sleep(8)
 
-    if go_fullscreen:
+def open_tiktok():
+    """ Opens tiktok upload website """
+    
+    p.keyDown("command")
+    sleep(.2)
+    p.press("l")
+    sleep(random_time(.2, .2))
+    p.press("a")
+    p.keyUp("command")
+    p.press("backspace")
+    p.typewrite('https://www.tiktok.com/')
+    p.press("enter")
+    sleep(random_time(5, 2))
+    
+    if not is_fullscreen():
         p.keyDown("command")
         p.keyDown("ctrl")
         p.press("f")
@@ -96,22 +149,14 @@ def launch_chrome(go_fullscreen=False):
         p.keyUp("command")
         p.keyUp("ctrl")
 
-def open_tiktok():
-    """ Opens tiktok upload website """
-    
-    p.keyDown("command")
-    sleep(.2)
-    p.press("t")
-    sleep(.2)
-    p.keyUp("command")
-    p.typewrite('https://www.tiktok.com/upload')
-    p.press("enter")
-    sleep(5)
-    sleep(1)
-
-def upload(filepath, caption):
+def auto_upload(filepath, caption):
     """ From tiktok.com/upload uploads video at 'filepath', 
         with caption 'caption' """
+    
+    # Click upload
+    x, y = TT_UPLOAD_BUTTON
+    move_and_click(x, y, random_time(.4, .5))
+    sleep(random_time(8, 4))
     
     # Click select file
     x, y = TT_SELECT_FILE_BUTTON
@@ -150,6 +195,26 @@ def upload(filepath, caption):
     # Wait for upload
     sleep(25)
 
+def log_out():
+    x, y = TT_PROFILE_ICON
+    move(x, y, random_time(.2, .4))
+    sleep(random_time(.1, .2))
+    x, y = TT_LOG_OUT_BUTTON
+    move_and_click(x, y, random_time(.2, .4))
+
+def upload(username, filepath, caption):
+    launch_chrome()
+    sleep(random_time(4, 2))
+    open_tiktok()
+    sleep(random_time(2, 1))
+    if not is_logged_out():
+        log_out()
+        sleep(random_time(10, 5))
+    login(username)
+    sleep(random_time(1, 3))
+    auto_upload(filepath, caption)
+
+
 # while True:
 #     print(p.position())
-#     sleep(5)
+#     sleep(3)
