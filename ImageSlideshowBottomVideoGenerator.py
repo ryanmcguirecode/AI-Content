@@ -46,10 +46,10 @@ class ImageSlideshowBottomVideoGenerator(ImageSlideshowGenerator):
         full_text_clips = concatenate_videoclips(text_clips).set_pos(("center", 800))
         
         self.final_video = CompositeVideoClip([full_video, full_text_clips]).set_audio(full_audio)
-        video_outpath = os.path.join(self.destination, "final_video.mp4")
-        save_video(self.final_video, video_outpath)
+        self.video_outpath = os.path.join(self.destination, "final_video.mp4")
+        save_video(self.final_video, self.video_outpath)
         
-        print("Final video saved to " + video_outpath)
+        print("Final video saved to " + self.video_outpath)
         
 class ImageSlideshowBottomVideoGeneratorTest(ImageSlideshowBottomVideoGenerator):
     def __init__(self, cp: ContentParameters) -> str:

@@ -3,7 +3,7 @@ from time import sleep
 from random import random
 
 def move(x, y, duration=.3):
-    p.move(x, y, duration=duration)
+    p.moveTo(x, y, duration=duration)
     
     
 def move_and_click(x, y, duration=.3):

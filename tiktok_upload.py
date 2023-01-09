@@ -51,8 +51,7 @@ def select_file(filepath):
     sleep(3)
     for dir in filepath.split("/"):
         p.typewrite(dir + "/")
-        sleep(.2)
-        sleep(random_time(3, 1))
+        sleep(random_time(1.5, 1))
     p.press('enter')
     sleep(random_time(3, 1))
     p.press("enter")
@@ -70,6 +69,38 @@ def type_caption(caption):
             p.typewrite(word + " ")
             sleep(random_time(.5, .1))
     p.press("backspace")
+    
+def launch_chrome(go_fullscreen=False):
+    p.keyDown("command")
+    p.press("space")
+    sleep(1.5)
+    p.keyUp("command")
+    sleep(1)
+    p.typewrite('chrome')
+    sleep(2)
+    p.hotkey('enter')
+    sleep(8)
+
+    if go_fullscreen:
+        p.keyDown("command")
+        p.keyDown("ctrl")
+        p.press("f")
+        sleep(1)
+        p.keyUp("command")
+        p.keyUp("ctrl")
+
+def open_tiktok():
+    """ Opens tiktok upload website """
+    
+    p.keyDown("command")
+    sleep(.2)
+    p.press("t")
+    sleep(.2)
+    p.keyUp("command")
+    p.typewrite('https://www.tiktok.com/upload')
+    p.press("enter")
+    sleep(5)
+    sleep(1)
 
 def upload(filepath, caption):
     """ From tiktok.com/upload uploads video at 'filepath', 
@@ -94,7 +125,7 @@ def upload(filepath, caption):
     # Clear preset caption
     for _ in range(15):
         p.press("backspace")
-        sleep(random_time(.05, .1))
+        sleep(random_time(.02, .02))
         
     # Type new caption
     type_caption(caption)
@@ -102,11 +133,16 @@ def upload(filepath, caption):
     
     # Scroll down
     p.scroll(TT_SCROLL_TO_UPLOAD)
-    sleep(random_time(.3, .5))
+    sleep(random_time(.2, .2))
     
     # Click post
     x, y = TT_POST_BUTTON
-    move_and_click(x, y, random(.4, .5))
+    # move(x, y, random_time(.2, .2))
+    move_and_click(x, y, random_time(.2, .2))
     
     # Wait for upload
     sleep(25)
+
+# while True:
+#     print(p.position())
+#     sleep(5)
