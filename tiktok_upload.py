@@ -1,6 +1,5 @@
 import pyautogui as p
 from time import sleep
-from random import random
 
 from auto_user_parameters import *
 from auto_user_functions import *
@@ -43,6 +42,14 @@ from auto_user_functions import *
 #     p.moveTo(887, 750, duration=random() + .4)
 #     p.click()
 #     sleep(random() + 10)
+
+def get_f_coords():
+    im = p.screenshot()
+    w, h = p.size()
+    for x in range(w * 2):
+        for y in range(h * 2):
+            if im.getpixel((x, y)) == FIND_COLOR:
+                return (x // 2, y // 2)
 
 def select_file(filepath):
     """ Selects file at 'filepath' in file dialog using keyboard """
