@@ -55,7 +55,6 @@ class TextVideoGenerator(ContentGenerator):
         
         self.voiceover = generate_voiceover_audiofileclip(self, self.content_parameters)
         self.timestamps = get_timestamps(self, self.content_parameters)
-        print(self.timestamps)
         duration = self.voiceover.duration + self.content_parameters.end_time
         
         self.content_parameters.music.music_duration = duration

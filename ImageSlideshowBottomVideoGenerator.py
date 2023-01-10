@@ -21,7 +21,7 @@ class ImageSlideshowBottomVideoGenerator(ImageSlideshowGenerator):
         self.voiceover = generate_voiceover_audiofileclip(self, self.content_parameters)
         self.timestamps = get_timestamps(self, self.content_parameters)
         
-        self.content_parameters.music.music_duration = self.voiceover.duration
+        self.content_parameters.music.music_duration = self.voiceover.duration + self.content_parameters.end_time
         music_audio = generate_music_audiofileclip(self, self.content_parameters)
         full_audio = CompositeAudioClip([self.voiceover, music_audio])
         

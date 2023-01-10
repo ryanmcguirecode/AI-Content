@@ -33,10 +33,9 @@ def text_to_ssml(text: str, sentence_pause:float =0):
 def select_voice():
     """ Select a random voice from list of options """
     
-    voices = [Voice("en-US-Wavenet-I")]
-            #   Voice("en-US-Neural2-D")], 
-            #   Voice("en-US-Neural2-H"), Voice("en-US-Neural2-I"), 
-            #   Voice("en-US-Neural2-J")]
+    voices = [Voice("en-US-Wavenet-I")] #,
+    #           Voice("en-US-Neural2-D"), Voice("en-US-Neural2-H"), 
+    #           Voice("en-US-Neural2-I"), Voice("en-US-Neural2-J")]
     return choice(voices)
         
 def text_to_wav(text: str, outpath: str, voice: Voice):

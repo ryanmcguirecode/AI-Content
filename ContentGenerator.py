@@ -2,6 +2,7 @@ import os
 
 from ContentParameters import ContentParameters
 from helper_functions import generate_content_name
+from constants import WORDS_PER_PICTURE as WPP
 
 class ContentGenerator:
     """ Generates all necesary content for video based on ContentParameters
@@ -41,4 +42,11 @@ class ContentGenerator:
             
     def get_paragraphs(self):
         """ Get paragraphs based on text """
-        self.paragraphs = [par.strip() for par in self.text.split("\n") if par]
+        
+        self.paragraphs = [[]]
+        for word in self.text.split():
+            if len(self.paragraphs[-1]) >= WPP:
+                self.paragraphs.append([])
+            self.paragraphs[-1].append(word)
+        
+        self.paragraphs = [" ".join(par).strip() for par in self.paragraphs]

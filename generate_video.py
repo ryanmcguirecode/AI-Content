@@ -12,7 +12,6 @@ def get_subtitle_groups(words: list[str]) -> list[str]:
     subtitle_groups = [[]]
     punctuation_marker = False
     for word in words:
-        print(word)
         if len(subtitle_groups[-1]) >= SD or punctuation_marker:
             subtitle_groups.append([])
         subtitle_groups[-1].append(word)

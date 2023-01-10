@@ -3,7 +3,5 @@ credentials/
 __pycache__/
 generated_content/
 content_resources/
-test.py
-test2.py
-test3.py
+test*.py
 ContentGeneratorTest.py

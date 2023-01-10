@@ -3,52 +3,11 @@ from time import sleep
 
 from auto_user_parameters import *
 from auto_user_functions import *
+from helper_functions import command_fn
 
-# def login():
-#     # Click login
-#     p.moveTo(1175, 133, duration=random() + .4)
-#     p.click()
-#     sleep(random() * 3)
-
-#     # Click login with google
-#     p.moveTo(707, 502, duration=random() + .4)
-#     p.click()
-#     sleep(random() * 3)
-
-#     # Click text field
-#     p.moveTo(707, 502, duration=random() + .4)
-#     p.click()
-#     sleep(random() * 3)
-
-#     # Type username
-#     p.typewrite("story.forge.1")
-#     sleep(random() * 3)
-
-#     # Click next
-#     p.moveTo(887, 719, duration=random() + .4)
-#     p.click()
-#     sleep(random() * 3)
-
-#     # Click text field
-#     p.moveTo(707, 502, duration=random() + .4)
-#     p.click()
-#     sleep(random() * 3)
-
-#     # Type password
-#     p.typewrite("zyxsiw-bapFo0-xignyc")
-#     sleep(random() * 3)
-
-#     # Click next
-#     p.moveTo(887, 750, duration=random() + .4)
-#     p.click()
-#     sleep(random() + 10)
 
 def get_f_coords(text):
-    p.keyDown("command")
-    sleep(random_time(.2, .2))
-    p.press("f")
-    sleep(random_time(.2, .2))
-    p.keyUp("command")
+    command_fn(["command"], ["f"])
     p.typewrite(text)
     sleep(random_time(2.5, 1))
     
@@ -117,10 +76,7 @@ def type_caption(caption):
     p.press("backspace")
     
 def launch_chrome():
-    p.keyDown("command")
-    p.press("space")
-    sleep(1.5)
-    p.keyUp("command")
+    command_fn(["command"], ["space"])
     sleep(1)
     p.typewrite('chrome')
     sleep(2)
@@ -130,24 +86,14 @@ def launch_chrome():
 def open_tiktok():
     """ Opens tiktok upload website """
     
-    p.keyDown("command")
-    sleep(.2)
-    p.press("l")
-    sleep(random_time(.2, .2))
-    p.press("a")
-    p.keyUp("command")
+    command_fn(["command"], ["l", "a"])
     p.press("backspace")
     p.typewrite('https://www.tiktok.com/')
     p.press("enter")
     sleep(random_time(5, 2))
     
     if not is_fullscreen():
-        p.keyDown("command")
-        p.keyDown("ctrl")
-        p.press("f")
-        sleep(1)
-        p.keyUp("command")
-        p.keyUp("ctrl")
+        command_fn(["command", "ctrl"], ["f"])
 
 def auto_upload(filepath, caption):
     """ From tiktok.com/upload uploads video at 'filepath', 
@@ -207,10 +153,9 @@ def upload(username, filepath, caption):
     sleep(random_time(4, 2))
     open_tiktok()
     sleep(random_time(2, 1))
-    if not is_logged_out():
-        log_out()
+    if is_logged_out():
+        login(username)
         sleep(random_time(10, 5))
-    login(username)
     sleep(random_time(1, 3))
     auto_upload(filepath, caption)
 
