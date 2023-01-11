@@ -1,4 +1,5 @@
-chatGPT==0.3.6
+git+https://github.com/mmabrouk/chatgpt-wrapper
+pyreadline3
 google_api_python_client==2.72.0
 httplib2==0.21.0
 moviepy==1.0.3
@@ -6,3 +7,4 @@ oauth2client==4.1.3
 openai==0.25.0
 protobuf==4.21.12
 PyAutoGUI==0.9.53
+pytube

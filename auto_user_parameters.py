@@ -1,3 +1,10 @@
+import platform
+
+if platform.system() == "Windows":
+    is_windows = True
+else:
+    is_windows = False
+
 TT_UPLOAD_BUTTON = (1067, 105)
 TT_LOG_IN_BUTTON = (1138, 107)
 TT_LOG_IN_BUTTON_COLOR = (255, 47, 86, 255)
