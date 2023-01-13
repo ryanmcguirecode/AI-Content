@@ -135,8 +135,8 @@ def auto_upload(filepath, caption):
     
     # Click post
     x, y = TT_POST_BUTTON
-    # move(x, y, random_time(.2, .2))
-    move_and_click(x, y, random_time(.2, .2))
+    move(x, y, random_time(.2, .2))
+    # move_and_click(x, y, random_time(.2, .2))
     
     # Wait for upload
     sleep(25)

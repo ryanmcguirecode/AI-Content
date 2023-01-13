@@ -5,3 +5,4 @@ generated_content/
 content_resources/
 test*.py
 ContentGeneratorTest.py
+settings.json
